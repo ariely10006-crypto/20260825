@@ -1,0 +1,742 @@
+第一版
+
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>親密關係傾向調查</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #e9e5df;
+    color: #222;
+    font-family: "Microsoft JhengHei", sans-serif;
+    transition: background 2s, color 2s;
+}
+
+body.dark {
+    background: #090909;
+    color: #ddd;
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.card {
+    width: 650px;
+    max-width: 95%;
+    padding: 40px;
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 10px 40px rgba(0,0,0,.08);
+    transition: all 1s;
+}
+
+.dark .card {
+    background: #111;
+    border-color: #333;
+    box-shadow: 0 0 60px rgba(0,0,0,.8);
+}
+
+.title {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+.description {
+    color: #777;
+    line-height: 1.9;
+    margin-bottom: 30px;
+}
+
+.dark .description {
+    color: #888;
+}
+
+.center {
+    text-align: center;
+}
+
+button {
+    font-family: inherit;
+}
+
+.start-button {
+    padding: 13px 35px;
+    background: white;
+    border: 1px solid #777;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.start-button:hover {
+    background: #eee;
+}
+
+.dark .start-button {
+    background: #151515;
+    color: #ccc;
+    border-color: #555;
+}
+
+.question-number {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.question {
+    font-size: 21px;
+    line-height: 1.8;
+    margin-bottom: 25px;
+}
+
+.option {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 15px;
+    text-align: left;
+
+    background: #fff;
+    color: #222;
+    border: 1px solid #ccc;
+
+    cursor: pointer;
+    font-size: 16px;
+
+    transition: .2s;
+}
+
+.option:hover {
+    background: #f0eeeb;
+    transform: translateX(5px);
+}
+
+.dark .option {
+    background: #151515;
+    color: #ccc;
+    border-color: #333;
+}
+
+.dark .option:hover {
+    background: #222;
+}
+
+.message {
+    margin-top: 20px;
+    min-height: 30px;
+    color: #888;
+    line-height: 1.7;
+}
+
+.final {
+    line-height: 2;
+}
+
+.final-warning {
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 1px solid #444;
+    color: #999;
+}
+
+.fade {
+    animation: fade .8s;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media(max-width:600px) {
+
+    .card {
+        padding: 25px;
+    }
+
+    .question {
+        font-size: 18px;
+    }
+
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <div class="card" id="card">
+
+        <div id="content">
+
+            <div class="title">
+                《親密關係傾向調查》
+            </div>
+
+            <div class="description">
+
+                <p>
+                    歡迎參與本次親密關係心理傾向調查。
+                </p>
+
+                <p>
+                    本測驗將分析您在親密關係中的
+                    安全感、依附程度與情緒反應。
+                </p>
+
+                <p>
+                    請依照第一直覺回答。
+                </p>
+
+                <p>
+                    <small>
+                        ※ 本測驗僅供娛樂，不代表正式心理評估。
+                    </small>
+                </p>
+
+            </div>
+
+            <div class="center">
+
+                <button
+                    class="start-button"
+                    onclick="startTest()">
+
+                    開始測驗
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const questions = [
+
+{
+    question: "如果喜歡的人很久沒有回覆你的訊息，你會？",
+    options: [
+        "A. 等他有空自然會回",
+        "B. 傳一則訊息問問看",
+        "C. 開始想他是不是在跟別人聊天",
+        "D. 想辦法知道他現在在哪裡"
+    ]
+},
+
+{
+    question: "你認為戀人需要知道彼此的行蹤嗎？",
+    options: [
+        "A. 不需要，每個人都有自己的空間",
+        "B. 偶爾知道就好",
+        "C. 我知道會比較安心",
+        "D. 當然，戀人就應該知道"
+    ]
+},
+
+{
+    question: "戀人突然說：「我今天想自己一個人。」你會？",
+    options: [
+        "A. 尊重他",
+        "B. 有點失落，但不打擾",
+        "C. 想知道是不是發生了什麼",
+        "D. 想知道他到底要去哪裡"
+    ]
+},
+
+{
+    question: "如果戀人交了一個你完全不認識的新朋友，你會？",
+    options: [
+        "A. 覺得很正常",
+        "B. 有一點好奇",
+        "C. 想知道那個人是誰",
+        "D. 想知道他們平常都聊什麼"
+    ]
+},
+
+{
+    question: "你發現戀人刪掉了一則訊息，你會？",
+    options: [
+        "A. 不在意",
+        "B. 問問他刪了什麼",
+        "C. 忍不住一直猜",
+        "D. 一定要知道內容"
+    ]
+},
+
+{
+    question: "戀人對你說：「你不用什麼事情都知道。」",
+    options: [
+        "A. 我能理解",
+        "B. 聽了有點難過",
+        "C. 我會問為什麼",
+        "D. 我會覺得他在隱瞞我"
+    ]
+},
+
+{
+    question: "如果戀人突然變得很冷淡，你第一個想法是？",
+    options: [
+        "A. 他可能只是累了",
+        "B. 是不是發生了什麼",
+        "C. 是不是我做錯了什麼",
+        "D. 他是不是有其他重要的人"
+    ]
+},
+
+{
+    question: "如果戀人說：「我們需要一點距離。」",
+    options: [
+        "A. 尊重他的決定",
+        "B. 問問原因",
+        "C. 害怕他離開",
+        "D. 我不喜歡這個答案"
+    ]
+},
+
+{
+    question: "你最害怕戀人做什麼？",
+    options: [
+        "A. 不再喜歡我",
+        "B. 慢慢疏遠我",
+        "C. 找到比我更重要的人",
+        "D. 有一天突然不需要我"
+    ]
+},
+
+{
+    question: "如果戀人的手機突然亮了一下，他卻沒有告訴你是誰，你會？",
+    options: [
+        "A. 不在意",
+        "B. 有點好奇",
+        "C. 想知道是誰",
+        "D. 一定要知道"
+    ]
+},
+
+{
+    question: "你看到戀人在線上，但他沒有回你的訊息。",
+    options: [
+        "A. 他可能在忙其他事情",
+        "B. 等一下再看看",
+        "C. 開始想他在跟誰聊天",
+        "D. 我會想知道他為什麼不回我"
+    ]
+},
+
+{
+    question: "如果戀人說：「即使沒有你，我也可以過得很好。」",
+    options: [
+        "A. 我會替他高興",
+        "B. 聽起來有點難過",
+        "C. 開始懷疑自己對他的重要性",
+        "D. 我不喜歡這句話"
+    ]
+},
+
+{
+    question: "你認為戀人之間可以有秘密嗎？",
+    options: [
+        "A. 當然可以",
+        "B. 小事情可以",
+        "C. 太多秘密會讓我不安",
+        "D. 戀人不應該有我不知道的事情"
+    ]
+},
+
+{
+    question: "如果你知道戀人現在就在你家附近，你會？",
+    options: [
+        "A. 覺得很驚喜",
+        "B. 很開心",
+        "C. 問他為什麼沒有告訴我",
+        "D. ……他怎麼知道我在家？"
+    ]
+},
+
+{
+    question: "如果有人問你：「你知道他現在在哪裡嗎？」",
+    options: [
+        "A. 不知道",
+        "B. 應該知道吧",
+        "C. 我可以去確認",
+        "D. ……為什麼你問這個？"
+    ]
+},
+
+{
+    question: "最後，你覺得這份測驗真的只是在分析你的戀愛傾向嗎？",
+    options: [
+        "A. 當然是",
+        "B. 應該是吧",
+        "C. 我不知道",
+        "D. 不是。"
+    ]
+}
+
+];
+
+
+let currentQuestion = 0;
+let score = 0;
+
+
+function startTest() {
+
+    currentQuestion = 0;
+    score = 0;
+
+    showQuestion();
+
+}
+
+
+function showQuestion() {
+
+    const q = questions[currentQuestion];
+
+    const content = document.getElementById("content");
+
+    content.className = "fade";
+
+    let html = "";
+
+    html += `
+        <div class="question-number">
+            第 ${currentQuestion + 1} / ${questions.length} 題
+        </div>
+    `;
+
+    html += `
+        <div class="question">
+            ${q.question}
+        </div>
+    `;
+
+    q.options.forEach(function(option, index) {
+
+        html += `
+            <button
+                class="option"
+                onclick="answer(${index})">
+
+                ${option}
+
+            </button>
+        `;
+
+    });
+
+    html += `
+        <div
+            class="message"
+            id="message">
+        </div>
+    `;
+
+    content.innerHTML = html;
+
+
+    /*
+       從第 6 題開始變暗
+    */
+
+    if(currentQuestion >= 5) {
+
+        document.body.classList.add("dark");
+
+    }
+
+}
+
+
+function answer(index) {
+
+    /*
+       答案越後面，代表越高的控制/不安傾向
+    */
+
+    score += index;
+
+
+    const message =
+        document.getElementById("message");
+
+
+    /*
+       特殊事件
+    */
+
+    if(currentQuestion === 4) {
+
+        message.innerText =
+            "已記錄。";
+
+    }
+
+    else if(currentQuestion === 6) {
+
+        if(index >= 2) {
+
+            message.innerText =
+                "你似乎很在意他現在在哪裡。";
+
+        } else {
+
+            message.innerText =
+                "了解。";
+
+        }
+
+    }
+
+    else if(currentQuestion === 8) {
+
+        message.innerText =
+            "有些答案，和前面的回答很相似。";
+
+    }
+
+    else if(currentQuestion === 10) {
+
+        message.innerText =
+            "系統：正在分析你的回答……";
+
+    }
+
+    else if(currentQuestion === 12) {
+
+        message.innerText =
+            "不用擔心。";
+
+    }
+
+    else if(currentQuestion === 13) {
+
+        message.innerText =
+            "……他怎麼知道你在家？";
+
+    }
+
+    else if(currentQuestion === 14) {
+
+        message.innerText =
+            "這個問題不是測驗的一部分。";
+
+    }
+
+
+    /*
+       第 6 題後逐漸出現異常
+    */
+
+    if(currentQuestion >= 5) {
+
+        setTimeout(function() {
+
+            if(currentQuestion === 6) {
+
+                message.innerText =
+                    "你剛才停頓了一下。";
+
+            }
+
+            if(currentQuestion === 9) {
+
+                message.innerText =
+                    "你真的想知道答案嗎？";
+
+            }
+
+            if(currentQuestion === 11) {
+
+                message.innerText =
+                    "不用解釋。";
+
+            }
+
+            if(currentQuestion === 14) {
+
+                message.innerText =
+                    "我們已經知道了。";
+
+            }
+
+        }, 900);
+
+    }
+
+
+    setTimeout(function() {
+
+        currentQuestion++;
+
+        if(currentQuestion >= questions.length) {
+
+            showEnding();
+
+        } else {
+
+            showQuestion();
+
+        }
+
+    }, 1800);
+
+}
+
+
+function showEnding() {
+
+    document.body.classList.add("dark");
+
+    const content =
+        document.getElementById("content");
+
+
+    let resultTitle = "";
+
+    if(score <= 10) {
+
+        resultTitle = "安全型依附";
+
+    }
+
+    else if(score <= 20) {
+
+        resultTitle = "不安型依附";
+
+    }
+
+    else if(score <= 32) {
+
+        resultTitle = "高度依附";
+
+    }
+
+    else {
+
+        resultTitle = "無法判定";
+
+    }
+
+
+    content.innerHTML = `
+
+        <div class="final">
+
+            <div class="title">
+                測驗完成
+            </div>
+
+            <p>
+                受測結果：
+                <strong>${resultTitle}</strong>
+            </p>
+
+            <p>
+                感謝你完成本次測驗。
+            </p>
+
+            <div
+                class="final-warning"
+                id="endingText">
+            </div>
+
+        </div>
+
+    `;
+
+
+    const ending =
+        document.getElementById("endingText");
+
+
+    /*
+       故意一段一段出現
+    */
+
+    setTimeout(function() {
+
+        ending.innerHTML =
+            "不過，有一件事情需要更正。";
+
+    }, 1500);
+
+
+    setTimeout(function() {
+
+        ending.innerHTML +=
+            "<br><br>這份測驗從來不是在分析你。";
+
+    }, 3500);
+
+
+    setTimeout(function() {
+
+        ending.innerHTML +=
+            "<br><br>它一直在觀察你的回答。";
+
+    }, 5500);
+
+
+    setTimeout(function() {
+
+        ending.innerHTML +=
+            "<br><br>而且我們現在知道，你會怎麼選。";
+
+    }, 7500);
+
+
+    setTimeout(function() {
+
+        ending.innerHTML +=
+            "<br><br>所以最後一個問題不是測驗題。";
+
+    }, 9500);
+
+
+    setTimeout(function() {
+
+        ending.innerHTML +=
+            "<br><br><strong>你確定你現在是一個人在看這個畫面嗎？</strong>";
+
+    }, 12000);
+
+}
+
+</script>
+
+</body>
+</html>
